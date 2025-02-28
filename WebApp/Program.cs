@@ -27,12 +27,17 @@ builder.Services.AddHttpClient("WebApi", client =>
     client.BaseAddress = new Uri($"{apiBaseAddress}/");
 });
 
+// Services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReceiptService, ReceiptService>();
 builder.Services.AddScoped<IMoneyService, MoneyService>();
 builder.Services.AddScoped<IProductReceiptService, ProductReceiptService>();
+
+// Import product config services
+builder.Services.AddScoped<IProductConfigurationService, ProductConfigurationService>();
+builder.Services.AddScoped<IProductImportService, ProductImportService>();
 
 // Authorisation session
 builder.Services.AddSession(options =>
@@ -58,6 +63,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    DAL.Seeding.DbInitializer.Initialize(services);
+}
 
 // Swagger konfig
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,115 @@
+@page
+@model WebApp.Pages.ImportProductsModel
+@{
+    ViewData["Title"] = "Import Products";
+}
+
+<div class="container">
+    <h1>Import Products from Configuration</h1>
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            @Model.SuccessMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @Model.ErrorMessage
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Upload Configuration File</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="UploadFile">
+                        <div class="form-group mb-3">
+                            <label for="configFile">Select JSON Configuration File:</label>
+                            <input type="file" class="form-control" id="configFile" asp-for="ConfigFile" />
+                            <small class="form-text text-muted">Only JSON files are accepted.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload and Import</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Use Default Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <p>Import products from the default configuration file in the system.</p>
+                    <form method="post" asp-page-handler="ImportDefault">
+                        <button type="submit" class="btn btn-secondary">Import Default</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.ImportResult != null)
+    {
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Import Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h3>@Model.ImportResult.TotalItems</h3>
+                                <p>Total Items</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.ImportResult.AddedItems</h3>
+                                <p>Added</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.ImportResult.UpdatedItems</h3>
+                                <p>Updated</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning">
+                            <div class="card-body text-center">
+                                <h3>@Model.ImportResult.SkippedItems</h3>
+                                <p>Skipped</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.ImportResult.SkippedItems > 0 && Model.ImportResult.SkippedItemDetails?.Count > 0)
+                {
+                    <div class="mt-4">
+                        <h6>Skipped Items Details:</h6>
+                        <ul class="list-group">
+                            @foreach (var detail in Model.ImportResult.SkippedItemDetails)
+                            {
+                                <li class="list-group-item">@detail</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+

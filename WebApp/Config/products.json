@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "name": "Apple Pie",
+      "description": "Fresh homemade apple pie",
+      "price": 3.00,
+      "stock": 10,
+      "productTypeId": 1
+    },
+    {
+      "name": "Coffee",
+      "description": "Hot aromatic coffee",
+      "price": 2.50,
+      "stock": 50,
+      "productTypeId": 2
+    },
+    {
+      "name": "T-shirt",
+      "description": "Cotton t-shirt",
+      "price": 5.00,
+      "stock": 20,
+      "productTypeId": 3
+    },
+    {
+      "name": "Jeans",
+      "description": "Denim jeans",
+      "price": 10.00,
+      "stock": 15,
+      "productTypeId": 3
+    }
+  ]
+}
