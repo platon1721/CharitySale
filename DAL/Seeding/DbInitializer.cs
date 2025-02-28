@@ -1,6 +1,7 @@
 using DAL.Context;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +17,18 @@ namespace DAL.Seeding
             try
             {
                 var context = services.GetRequiredService<AppDbContext>();
+                var config = services.GetRequiredService<IConfiguration>();
+
                 
-                // Check if db is done
-                context.Database.Migrate();
-                
-                // Adding data
-                SeedData(context);
+                if (context.Database.CanConnect())
+                {
+                    // Adding data
+                    SeedData(context);
+                }
+                else
+                {
+                    Console.WriteLine("Could not connect to DB");
+                }
             }
             catch (Exception ex)
             {
