@@ -22,6 +22,8 @@ You can use the LocalConnection for development, or modify it based on your Post
     dotnet ef database update
 ### 4. Run the application
     dotnet run
+### 5. Browser
+In your browser go to http://localhost:5052
 
 ## Using
 
