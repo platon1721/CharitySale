@@ -1,16 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using BLL.DTO;
-using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using DAL.Context;
-using Domain.Entities;
-using WebApp.ApiControllers;
 using WebApp.Pages.Shared;
 
 namespace WebApp.Pages.Products
@@ -34,11 +23,6 @@ namespace WebApp.Pages.Products
         {
             // Check authorisation if needed
             var userId = _httpContextAccessor.HttpContext?.Session.GetInt32("UserId");
-            if (!userId.HasValue)
-            {
-                // Uncomment the following line if you want to redirect unauthorized users
-                // return RedirectToPage("/Users/Login");
-            }
 
             try 
             {
@@ -53,8 +37,6 @@ namespace WebApp.Pages.Products
             catch 
             {
                 Products = new List<ProductDto>();
-                // Optionally, you can add an error message to ModelState here
-                // ModelState.AddModelError(string.Empty, "An error occurred while fetching products.");
             }
 
             return Page();

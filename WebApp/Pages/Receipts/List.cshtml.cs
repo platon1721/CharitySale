@@ -37,15 +37,13 @@ namespace WebApp.Pages.Receipts
                 }
                 else
                 {
-                    Console.WriteLine($"Error: {response.StatusCode}");
                     Receipts = new List<ReceiptDto>();
                 }
 
                 return Page();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 Receipts = new List<ReceiptDto>();
                 return Page();
             }

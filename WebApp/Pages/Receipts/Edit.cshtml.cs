@@ -1,5 +1,4 @@
 using BLL.DTO;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Pages.Shared;
 
@@ -48,8 +47,6 @@ namespace WebApp.Pages.Receipts
         {
             try 
             {
-                Console.WriteLine($"Adding product to receipt. ReceiptId: {receiptId}, ProductId: {productId}, Quantity: {quantity}");
-
                 var dto = new AddProductToReceiptDto
                 {
                     ProductId = productId,
@@ -57,28 +54,21 @@ namespace WebApp.Pages.Receipts
                 };
 
                 var response = await _httpClient.PostAsJsonAsync($"api/Receipts/{receiptId}/products", dto);
-        
-                Console.WriteLine($"Response status: {response.StatusCode}");
-        
+                
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Response content: {responseContent}");
                     return RedirectToPage("./Edit", new { id = receiptId });
                 }
         
                 var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error content: {errorContent}");
         
                 ModelState.AddModelError(string.Empty, "Failed to add product to receipt");
                 await LoadProductsAndTypes();
                 return Page();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
-        
                 ModelState.AddModelError(string.Empty, "An error occurred while adding the product");
                 await LoadProductsAndTypes();
                 return Page();
@@ -93,10 +83,6 @@ namespace WebApp.Pages.Receipts
         /// <returns>If task was successful, redirect to the open receipt edit page.</returns>
         public async Task<IActionResult> OnPostRemoveProductAsync(int receiptId, int productId)
         {
-            Console.WriteLine("from edit page:");
-            Console.WriteLine(receiptId);
-            Console.WriteLine(productId);
-            Console.WriteLine("______________");
             try 
             {
                 var response = await _httpClient.DeleteAsync($"api/Receipts/{receiptId}/products/{productId}");
@@ -105,16 +91,14 @@ namespace WebApp.Pages.Receipts
                     return RedirectToPage("./Edit", new { id = receiptId });
                 }
 
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error removing product: {errorContent}");
+                await response.Content.ReadAsStringAsync();
 
                 ModelState.AddModelError(string.Empty, "Failed to remove product from receipt");
                 await LoadProductsAndTypes();
                 return Page();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
                 ModelState.AddModelError(string.Empty, "An error occurred while removing the product");
                 await LoadProductsAndTypes();
                 return Page();
@@ -132,8 +116,6 @@ namespace WebApp.Pages.Receipts
         {
             try 
             {
-                Console.WriteLine($"Updating product quantity. ReceiptId: {receiptId}, ProductId: {productId}, Quantity: {quantity}");
-
                 var dto = new UpdateReceiptProductDto
                 {
                     ProductId = productId,
@@ -150,28 +132,19 @@ namespace WebApp.Pages.Receipts
                     $"api/Receipts/{receiptId}/products/{productId}", 
                     requestContent
                 );
-
-                Console.WriteLine($"Response status: {response.StatusCode}");
-
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Response content: {responseContent}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     return RedirectToPage("./Edit", new { id = receiptId });
                 }
-
-                Console.WriteLine($"Error updating product quantity: {responseContent}");
-
+                
                 ModelState.AddModelError(string.Empty, "Failed to update product quantity");
                 await LoadProductsAndTypes();
                 return Page();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
-
                 ModelState.AddModelError(string.Empty, "An error occurred while updating product quantity");
                 await LoadProductsAndTypes();
                 return Page();
@@ -186,15 +159,13 @@ namespace WebApp.Pages.Receipts
         /// <returns>If task was not successful, returns same page, otherwise, redirects to the POS page.</returns>
         public async Task<ActionResult> OnPostCancelReceiptAsync(int receiptId)
         {
-            Console.WriteLine($"DeleteReceiptId edit page: {receiptId}");
             try
             {
                 await _httpClient.DeleteAsync($"api/Receipts/{receiptId}");
                 return RedirectToPage("./Index");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return Page();
             }
         }
@@ -222,18 +193,14 @@ namespace WebApp.Pages.Receipts
                 }
                 else
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error content: {errorContent}");
+                    await response.Content.ReadAsStringAsync();
 
                     ModelState.AddModelError(string.Empty, "Failed to complete receipt");
                     return Page();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
-
                 ModelState.AddModelError(string.Empty, "An error occurred while completing the receipt");
                 return Page();
             }

@@ -20,7 +20,6 @@ namespace WebApp.Pages.Transactions
 
         public async Task OnGetAsync()
         {
-            // Kasuta MoneyTransactionsController API otspunkti
             var response = await _httpClient.GetAsync("api/MoneyTransactions");
             
             if (response.IsSuccessStatusCode)
@@ -29,9 +28,7 @@ namespace WebApp.Pages.Transactions
             }
             else
             {
-                // Logi viga või näita veateadet
-                var error = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error fetching transactions: {error}");
+                await response.Content.ReadAsStringAsync();
                 MoneyTransactions = new List<MoneyTransactionDto>();
             }
         }

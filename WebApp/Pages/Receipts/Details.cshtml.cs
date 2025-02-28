@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BLL.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using DAL.Context;
-using Domain.Entities;
 using WebApp.Pages.Shared;
 
 namespace WebApp.Pages.Receipts
@@ -67,18 +59,15 @@ namespace WebApp.Pages.Receipts
                     return RedirectToPage("/Receipts/Index");
                 }
 
-                var errorContentTransaction = await responseTransaction.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error returning receipt: {errorContentTransaction}");
+                await responseTransaction.Content.ReadAsStringAsync();
                 
-                var errorContentReceipt = await responseReceipt.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error returning receipt: {errorContentReceipt}");
+                await responseReceipt.Content.ReadAsStringAsync();
 
                 ModelState.AddModelError(string.Empty, "Failed to return receipt");
                 return Page();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
                 ModelState.AddModelError(string.Empty, "An error occurred while returning the receipt");
                 return Page();
             }

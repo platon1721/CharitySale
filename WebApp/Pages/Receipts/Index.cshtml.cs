@@ -57,34 +57,25 @@ namespace WebApp.Pages.Receipts
             {
                 UserId = UserId.Value
             };
-        
-            Console.WriteLine($"IndexModel - Sending UserId: {createReceiptDto.UserId}");
-        
+            
             var response = await _httpClient.PostAsJsonAsync("api/Receipts", createReceiptDto);
-        
-            Console.WriteLine($"IndexModel - Response Status: {response.StatusCode}");
-        
+            
             if (!response.IsSuccessStatusCode)
             {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"IndexModel - Error response: {response.StatusCode}, Content: {errorContent}");
+                await response.Content.ReadAsStringAsync();
             }
         
             if (response.IsSuccessStatusCode)
             {
                 var receipt = await response.Content.ReadFromJsonAsync<ReceiptDto>();
-                Console.WriteLine($"IndexModel - Created receipt ID: {receipt?.Id}");
                 return RedirectToPage("./Edit", new { id = receipt.Id });
             }
         
             ModelState.AddModelError(string.Empty, "Failed to create receipt");
             return Page();
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine($"IndexModel - Exception details: {e.Message}");
-            Console.WriteLine($"Stack trace: {e.StackTrace}");
-        
             ModelState.AddModelError(string.Empty, "An error occurred while creating the receipt");
             return Page();
         }
