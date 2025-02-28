@@ -50,39 +50,5 @@ namespace WebApp.Pages.Receipts
                 return Page();
             }
         }
-        // public async Task<IActionResult> OnGetAsync()
-        // {
-        //     var userId = _httpContextAccessor.HttpContext.Session.GetInt32("UserId");
-        //     if (!userId.HasValue)
-        //     {
-        //         return RedirectToPage("/Users/Login");
-        //     }
-        //
-        //     try
-        //     {
-        //         var newReceiptDto = new CreateReceiptDto
-        //         {
-        //             UserId = userId.Value,
-        //             Products = new List<CreateReceiptProductDto>()
-        //         };
-        //
-        //         var response = await _httpClient.PostAsJsonAsync("api/Receipts", newReceiptDto);
-        //     
-        //         if (response.IsSuccessStatusCode)
-        //         {
-        //             var createdReceipt = await response.Content.ReadFromJsonAsync<ReceiptDto>();
-        //             return RedirectToPage("./Edit", new { id = createdReceipt.Id });
-        //         }
-        //         else
-        //         {
-        //             // Handle error
-        //             return RedirectToPage("/Error");
-        //         }
-        //     }
-        //     catch
-        //     {
-        //         return RedirectToPage("/Error");
-        //     }
-        // }
     }
 }

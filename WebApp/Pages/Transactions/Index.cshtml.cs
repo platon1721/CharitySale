@@ -1,30 +1,39 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using DAL.Context;
-using Domain.Entities;
+using BLL.DTO;
+using WebApp.Pages.Shared;
 
 namespace WebApp.Pages.Transactions
 {
-    public class IndexModel : PageModel
+    public class IndexModel : AuthenticatedPageModel
     {
-        private readonly DAL.Context.AppDbContext _context;
+        private readonly HttpClient _httpClient;
 
-        public IndexModel(DAL.Context.AppDbContext context)
+        public IndexModel(IHttpClientFactory httpClientFactory)
         {
-            _context = context;
+            _httpClient = httpClientFactory.CreateClient("WebApi");
         }
 
-        public IList<MoneyTransaction> MoneyTransaction { get;set; } = default!;
+        public IList<MoneyTransactionDto> MoneyTransactions { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            MoneyTransaction = await _context.MoneyTransactions
-                .Include(m => m.Receipt).ToListAsync();
+            // Kasuta MoneyTransactionsController API otspunkti
+            var response = await _httpClient.GetAsync("api/MoneyTransactions");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                MoneyTransactions = await response.Content.ReadFromJsonAsync<List<MoneyTransactionDto>>();
+            }
+            else
+            {
+                // Logi viga või näita veateadet
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error fetching transactions: {error}");
+                MoneyTransactions = new List<MoneyTransactionDto>();
+            }
         }
     }
 }

@@ -18,6 +18,17 @@ public class ProductReceiptService : IProductReceiptService
         _moneyService = moneyService;
     }
 
+    /// <summary>
+    /// Updates the quantity of a specific product in a receipt. If the quantity increases, it checks and decreases 
+    /// available product stock. If the quantity decreases, it returns stock back to inventory. If quantity is set 
+    /// to zero, the product is removed from the receipt entirely.
+    /// </summary>
+    /// <param name="receiptId">The ID of the receipt to update</param>
+    /// <param name="productId">The ID of the product within the receipt to update</param>
+    /// <param name="dto">Data transfer object containing the new quantity</param>
+    /// <returns>Updated receipt data transfer object with all related information</returns>
+    /// <exception cref="NotFoundException">Thrown when the product is not found in the specified receipt</exception>
+    /// <exception cref="OutOfStockException">Thrown when trying to increase quantity beyond available stock</exception>
     public async Task<ReceiptDto> UpdateProductQuantityAsync(int receiptId, int productId, UpdateReceiptProductDto dto)
     {
         using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
@@ -122,7 +133,7 @@ public class ProductReceiptService : IProductReceiptService
                     .ThenInclude(rp => rp.Product)
                 .FirstAsync(r => r.Id == receiptId);
 
-            return ReceiptMapper.MapToDto(updatedReceipt);
+            return ReceiptMapper.MapToDto(updatedReceipt, _context);
         }
         catch
         {

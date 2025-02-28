@@ -37,8 +37,10 @@ public static class ReceiptMapper
             PaidAmount = entity.PaidAmount,
             CreatedAt = entity.CreatedAt,
             Products = entity.ReceiptProducts
+                .Where(rp => rp.Product != null)
                 .Select(rp => new ReceiptProductDto
                 {
+                    ProductId = rp.ProductId,
                     ProductName = rp.Product.Name,
                     Quantity = rp.Quantity,
                     UnitPrice = rp.UnitPrice

@@ -13,7 +13,8 @@ public class MoneyTransactionMapper
             Amount = entity.Amount,
             Description = entity.Description,
             Type = entity.Type,
-            ReceiptId = entity.ReceiptId
+            ReceiptId = entity.ReceiptId,
+            CreatedAt = entity.CreatedAt
         };
     }
     

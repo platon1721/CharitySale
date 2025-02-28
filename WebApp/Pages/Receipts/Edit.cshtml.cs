@@ -85,10 +85,18 @@ namespace WebApp.Pages.Receipts
             }
         }
         
+        /// <summary>
+        /// Method to delete product from the open receipt.
+        /// </summary>
+        /// <param name="receiptId">Unique identifier of the receipt, where from to delete the product.</param>
+        /// <param name="productId">Unique identifier of the product to be deleted.</param>
+        /// <returns>If task was successful, redirect to the open receipt edit page.</returns>
         public async Task<IActionResult> OnPostRemoveProductAsync(int receiptId, int productId)
         {
+            Console.WriteLine("from edit page:");
             Console.WriteLine(receiptId);
             Console.WriteLine(productId);
+            Console.WriteLine("______________");
             try 
             {
                 var response = await _httpClient.DeleteAsync($"api/Receipts/{receiptId}/products/{productId}");

@@ -5,6 +5,7 @@ using BLL.Mappers;
 using DAL.Context;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BLL.Services;
 
@@ -417,88 +418,97 @@ public class ReceiptService: IReceiptService
             await _context.SaveChangesAsync();
     
             await transaction.CommitAsync();
-    
-            return ReceiptMapper.MapToDto(receipt, _context);
         }
         catch
         {
-            await transaction.RollbackAsync();
+            if (transaction.GetDbTransaction().Connection != null)
+            {
+                await transaction.RollbackAsync();
+            }
             throw;
         }
+        
+        var updatedReceipt = await _context.Receipts
+            .Include(r => r.User)
+            .Include(r => r.ReceiptProducts)
+            .ThenInclude(rp => rp.Product)
+            .FirstAsync(r => r.Id == receiptId);
+    
+        return ReceiptMapper.MapToDto(updatedReceipt, _context);
     }
 
     
-    // Task to update product quantity in receipt.
-    public async Task<ReceiptDto> UpdateProductQuantityAsync(int receiptId, int productId, UpdateReceiptProductQuantityDto dto)
-    {
-        using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
-        try
-        {
-            // Find product in the receipt.
-            var receiptProduct = await _context.ReceiptProducts
-                .Include(rp => rp.Receipt)
-                .Include(rp => rp.Product)
-                .FirstOrDefaultAsync(rp => rp.ReceiptId == receiptId && rp.ProductId == productId);
-
-            if (receiptProduct == null)
-                throw new NotFoundException("Product not found in receipt");
-
-            // Find product from list of products.
-            var product = await _context.Products
-                .FromSqlRaw("SELECT * FROM Products WITH (XLOCK, ROWLOCK) WHERE Id = {0}", productId)
-                .FirstOrDefaultAsync();
-            
-            if (product == null)
-                throw new NotFoundException($"Product with id {productId} not found");
-            
-            var quantityDifference = dto.Quantity - receiptProduct.Quantity;
-
-            if (quantityDifference > 0)
-            {
-                if (product.Stock < quantityDifference)
-                    throw new OutOfStockException($"Not enough stock. Available: {product.Stock}");
-                
-                // Update in stock quantity (take from stock)
-                product.Stock -= quantityDifference;
-                product.ModifiedAt = DateTime.UtcNow;
-            }
-            else if (quantityDifference < 0)
-            {
-                // Update in stock quantity (put into the stock)
-                product.Stock += Math.Abs(quantityDifference);
-                product.ModifiedAt = DateTime.UtcNow;
-            }
-
-            if (dto.Quantity == 0)
-            {
-                // If quantity of the product in the receipt is 0, then delete it.
-                _context.ReceiptProducts.Remove(receiptProduct);
-            }
-            else
-            {
-                // Update quantity
-                receiptProduct.Quantity = dto.Quantity;
-            }
-
-            // Update final price of the bill.
-            receiptProduct.Receipt.PaidAmount += (product.Price * quantityDifference);
-            receiptProduct.Receipt.ModifiedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            var updatedReceipt = await _context.Receipts
-                .Include(r => r.User)
-                .Include(r => r.ReceiptProducts)
-                    .ThenInclude(rp => rp.Product)
-                .FirstAsync(r => r.Id == receiptId);
-
-            return ReceiptMapper.MapToDto(updatedReceipt, _context);
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
+    // // Task to update product quantity in receipt.
+    // public async Task<ReceiptDto> UpdateProductQuantityAsync(int receiptId, int productId, UpdateReceiptProductQuantityDto dto)
+    // {
+    //     using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+    //     try
+    //     {
+    //         // Find product in the receipt.
+    //         var receiptProduct = await _context.ReceiptProducts
+    //             .Include(rp => rp.Receipt)
+    //             .Include(rp => rp.Product)
+    //             .FirstOrDefaultAsync(rp => rp.ReceiptId == receiptId && rp.ProductId == productId);
+    //
+    //         if (receiptProduct == null)
+    //             throw new NotFoundException("Product not found in receipt");
+    //
+    //         // Find product from list of products.
+    //         var product = await _context.Products
+    //             .FromSqlRaw("SELECT * FROM Products WITH (XLOCK, ROWLOCK) WHERE Id = {0}", productId)
+    //             .FirstOrDefaultAsync();
+    //         
+    //         if (product == null)
+    //             throw new NotFoundException($"Product with id {productId} not found");
+    //         
+    //         var quantityDifference = dto.Quantity - receiptProduct.Quantity;
+    //
+    //         if (quantityDifference > 0)
+    //         {
+    //             if (product.Stock < quantityDifference)
+    //                 throw new OutOfStockException($"Not enough stock. Available: {product.Stock}");
+    //             
+    //             // Update in stock quantity (take from stock)
+    //             product.Stock -= quantityDifference;
+    //             product.ModifiedAt = DateTime.UtcNow;
+    //         }
+    //         else if (quantityDifference < 0)
+    //         {
+    //             // Update in stock quantity (put into the stock)
+    //             product.Stock += Math.Abs(quantityDifference);
+    //             product.ModifiedAt = DateTime.UtcNow;
+    //         }
+    //
+    //         if (dto.Quantity == 0)
+    //         {
+    //             // If quantity of the product in the receipt is 0, then delete it.
+    //             _context.ReceiptProducts.Remove(receiptProduct);
+    //         }
+    //         else
+    //         {
+    //             // Update quantity
+    //             receiptProduct.Quantity = dto.Quantity;
+    //         }
+    //
+    //         // Update final price of the bill.
+    //         receiptProduct.Receipt.PaidAmount += (product.Price * quantityDifference);
+    //         receiptProduct.Receipt.ModifiedAt = DateTime.UtcNow;
+    //
+    //         await _context.SaveChangesAsync();
+    //         await transaction.CommitAsync();
+    //
+    //         var updatedReceipt = await _context.Receipts
+    //             .Include(r => r.User)
+    //             .Include(r => r.ReceiptProducts)
+    //                 .ThenInclude(rp => rp.Product)
+    //             .FirstAsync(r => r.Id == receiptId);
+    //
+    //         return ReceiptMapper.MapToDto(updatedReceipt, _context);
+    //     }
+    //     catch
+    //     {
+    //         await transaction.RollbackAsync();
+    //         throw;
+    //     }
+    // }
 }

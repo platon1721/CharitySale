@@ -165,8 +165,8 @@ public class ReceiptsController : ControllerBase
    [ProducesResponseType(StatusCodes.Status400BadRequest)]
    [ProducesResponseType(StatusCodes.Status404NotFound)]
    [SwaggerOperation(
-       Summary = "Add product to receipt", 
-       Description = "Adds a new product to an existing receipt")]
+       Summary = "Add product to the receipt", 
+       Description = "Adds a new product to the existing receipt")]
    public async Task<ActionResult<ReceiptDto>> AddProductToReceipt(
        [SwaggerParameter("Unique identifier of the receipt")] int receiptId, 
        [SwaggerParameter("Product details to add")] [FromBody] AddProductToReceiptDto dto)
@@ -175,19 +175,19 @@ public class ReceiptsController : ControllerBase
        return Ok(receipt);
    }
 
-   [HttpPut("{receiptId}/products/{productId}")]
-   [ProducesResponseType(StatusCodes.Status200OK)]
-   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-   [ProducesResponseType(StatusCodes.Status404NotFound)]
-   [SwaggerOperation(
-       Summary = "Update product quantity in receipt", 
-       Description = "Updates the quantity of a specific product in a receipt")]
-   public async Task<ActionResult<ReceiptDto>> UpdateProductQuantity(
-       [SwaggerParameter("Unique identifier of the receipt")] int receiptId, 
-       [SwaggerParameter("Unique identifier of the product")] int productId, 
-       [SwaggerParameter("New product quantity details")] [FromBody] UpdateReceiptProductQuantityDto dto)
-   {
-       var receipt = await _receiptService.UpdateProductQuantityAsync(receiptId, productId, dto);
-       return Ok(receipt);
-   }
+   // [HttpPut("{receiptId}/products/{productId}")]
+   // [ProducesResponseType(StatusCodes.Status200OK)]
+   // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+   // [ProducesResponseType(StatusCodes.Status404NotFound)]
+   // [SwaggerOperation(
+   //     Summary = "Update product quantity in receipt", 
+   //     Description = "Updates the quantity of a specific product in a receipt")]
+   // public async Task<ActionResult<ReceiptDto>> UpdateProductQuantity(
+   //     [SwaggerParameter("Unique identifier of the receipt")] int receiptId, 
+   //     [SwaggerParameter("Unique identifier of the product")] int productId, 
+   //     [SwaggerParameter("New product quantity details")] [FromBody] UpdateReceiptProductQuantityDto dto)
+   // {
+   //     var receipt = await _receiptService.UpdateProductQuantityAsync(receiptId, productId, dto);
+   //     return Ok(receipt);
+   // }
 }
