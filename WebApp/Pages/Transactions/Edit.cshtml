@@ -1,0 +1,60 @@
+@page
+@model WebApp.Pages.Transactions.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>MoneyTransaction</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MoneyTransaction.Amount" class="control-label"></label>
+                <input asp-for="MoneyTransaction.Amount" class="form-control" />
+                <span asp-validation-for="MoneyTransaction.Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoneyTransaction.Type" class="control-label"></label>
+                <select asp-for="MoneyTransaction.Type" class="form-control"></select>
+                <span asp-validation-for="MoneyTransaction.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoneyTransaction.ReceiptId" class="control-label"></label>
+                <select asp-for="MoneyTransaction.ReceiptId" class="form-control" asp-items="ViewBag.ReceiptId"></select>
+                <span asp-validation-for="MoneyTransaction.ReceiptId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoneyTransaction.Description" class="control-label"></label>
+                <input asp-for="MoneyTransaction.Description" class="form-control" />
+                <span asp-validation-for="MoneyTransaction.Description" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="MoneyTransaction.Id" />
+            <div class="form-group">
+                <label asp-for="MoneyTransaction.CreatedAt" class="control-label"></label>
+                <input asp-for="MoneyTransaction.CreatedAt" class="form-control" />
+                <span asp-validation-for="MoneyTransaction.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MoneyTransaction.ModifiedAt" class="control-label"></label>
+                <input asp-for="MoneyTransaction.ModifiedAt" class="form-control" />
+                <span asp-validation-for="MoneyTransaction.ModifiedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

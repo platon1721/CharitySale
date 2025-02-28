@@ -1,0 +1,41 @@
+@page
+@model WebApp.Pages.Receipts.IndexModel
+@{
+    ViewData["Title"] = "Cash Register";
+}
+
+<div class="container">
+    <h1>Cash Register</h1>
+
+    <form method="post" asp-page-handler="CreateNewReceipt">
+        <button type="submit" class="btn btn-primary btn-lg mb-3">Open New Bill</button>
+    </form>
+
+    @if (Model.UserReceipts.Any(r => r.IsOpen))
+    {
+        <h2>Active Bills</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Bill Number</th>
+                <th>Created At</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var receipt in Model.UserReceipts.Where(r => r.IsOpen))
+            {
+                <tr>
+                    <td>Bill @receipt.Id</td>
+                    <td>@receipt.CreatedAt.ToString("g")</td>
+                    <td>@receipt.PaidAmount.ToString("C")</td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@receipt.Id" class="btn btn-sm btn-warning">Continue</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

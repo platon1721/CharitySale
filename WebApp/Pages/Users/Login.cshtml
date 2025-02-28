@@ -1,0 +1,18 @@
+@page
+@model WebApp.Pages.Users.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-container">
+    <h2>Bake Sale Login</h2>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Login">Login</label>
+            <input asp-for="Login" class="form-control" />
+            <span asp-validation-for="Login" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Enter</button>
+    </form>
+</div>

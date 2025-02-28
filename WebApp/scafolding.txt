@@ -1,0 +1,9 @@
+dotnet aspnet-codegenerator razorpage -m Domain.Entities.User -outDir Pages/Users -dc DAL.Context.AppDbContext -udl --referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m Domain.Entities.ProductType -outDir Pages/ProductTypes -dc DAL.Context.AppDbContext -udl --referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m Domain.Entities.Product -outDir Pages/Products -dc DAL.Context.AppDbContext -udl --referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m Domain.Entities.Receipt -outDir Pages/Receipts -dc DAL.Context.AppDbContext -udl --referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m Domain.Entities.MoneyTransaction -outDir Pages/Transactions -dc DAL.Context.AppDbContext -udl --referenceScriptLibraries
+
+
+dotnet ef migrations add Initial --project DAL 
+dotnet ef migrations add AddMoneyTransactions -- project DAL

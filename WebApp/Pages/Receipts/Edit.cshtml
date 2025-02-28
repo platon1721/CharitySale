@@ -1,0 +1,138 @@
+@page "{id:int}"
+@model WebApp.Pages.Receipts.EditModel
+@{
+    ViewData["Title"] = "Edit Receipt";
+}
+<div class="container-fluid">
+<div class="row">
+    <!-- Toote kategooriad -->
+    <div class="col-md-2 bg-light sidebar">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            @foreach (var category in Model.ProductTypes)
+            {
+                <a class="nav-link @(category == Model.ProductTypes.First() ? "active" : "")" 
+                   id="v-pills-@(category.Name.ToLower().Replace(" ", "-"))-tab" 
+                   data-toggle="pill" 
+                   href="#v-pills-@(category.Name.ToLower().Replace(" ", "-"))" 
+                   role="tab">
+                    @category.Name
+                </a>
+            }
+        </div>
+    </div>
+    <!-- Tooted -->
+    <div class="col-md-7">
+        <div class="tab-content" id="v-pills-tabContent">
+            @foreach (var category in Model.ProductTypes)
+            {
+                <div class="tab-pane fade @(category == Model.ProductTypes.First() ? "show active" : "")" 
+                     id="v-pills-@(category.Name.ToLower().Replace(" ", "-"))" 
+                     role="tabpanel">
+                    <div class="row">
+                        @foreach (var product in Model.Products.Where(p => p.ProductTypeId == category.Id))
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 @(product.Quantity <= 0 ? "bg-light" : "")">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@product.Name</h5>
+                                        <p class="card-text">
+                                            Price: @product.Price.ToString("C")<br>
+                                            Stock: @product.Quantity
+                                        </p>
+                                        <form method="post" asp-page-handler="AddProduct">
+                                            <input type="hidden" name="receiptId" value="@Model.Receipt.Id" />
+                                            <input type="hidden" name="productId" value="@product.Id" />
+                                            <div class="input-group">
+                                                <input type="number" name="quantity" 
+                                                       class="form-control" 
+                                                       value="1" 
+                                                       min="1" 
+                                                       max="@product.Quantity" />
+                                                <div class="input-group-append">
+                                                    <button type="submit" 
+                                                            class="btn btn-primary @(product.Quantity <= 0 ? "disabled" : "")"
+                                                            @(product.Quantity <= 0 ? "disabled" : "")>
+                                                        Add to Bill
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Praegune arve -->
+    <div class="col-md-3">
+        <h4>Current Bill</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var product in Model.Receipt.Products)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td>
+                        <form method="post" asp-page-handler="UpdateProductQuantity" class="form-inline">
+                            <input type="hidden" name="receiptId" value="@Model.Receipt.Id" />
+                            <input type="hidden" name="productId" value="@product.ProductId" />
+                            @{ Console.WriteLine("update" + product.ProductId);}
+                            <input type="number"
+                                   name="quantity"
+                                   class="form-control form-control-sm mr-2"
+                                   value="@product.Quantity"
+                                   min="1"
+                                   max="100" />
+                            <button type="submit" class="btn btn-sm btn-warning">Update</button>
+                        </form>
+                    </td>
+                    <td>@product.UnitPrice.ToString("C")</td>
+                    <td>@product.TotalPrice.ToString("C")</td>
+                    <td>
+                        <form method="post" asp-page-handler="RemoveProduct">
+                            <input type="hidden" name="receiptId" value="@Model.Receipt.Id" />
+                            <input type="hidden" name="productId" value="@product.ProductId" />
+                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <h5>Total: @Model.Receipt.PaidAmount.ToString("C")</h5>
+        <form method="post" asp-page-handler="CompleteReceipt">
+            <input type="hidden" name="receiptId" value="@Model.Receipt.Id" />
+            <input type="hidden" name="amount" value="@Model.Receipt.PaidAmount" />
+            <button type="submit" class="btn btn-success btn-block">Complete Bill</button>
+        </form>
+        <form method="post" asp-page-handler="CancelReceipt">
+            <input type="hidden" name="receiptId" value="@Model.Receipt.Id" />
+            <button type="submit" class="btn btn-danger btn-block">Cancel Bill</button>
+        </form>
+    </div>
+</div>
+</div>
+@section Scripts {
+    <script>
+$(document).ready(function() {
+// Bootstrap tab aktiveerimise skript
+$('#v-pills-tab a').on('click', function (e) {
+e.preventDefault();
+$(this).tab('show');
+});
+});
+</script>
+}

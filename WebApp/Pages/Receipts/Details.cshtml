@@ -1,0 +1,85 @@
+@page "{id:int}"
+@model WebApp.Pages.Receipts.DetailsModel
+
+@{
+    ViewData["Title"] = "Receipt Details";
+}
+
+<div class="container">
+    <h1 class="mb-4">Receipt Details</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Receipt #@Model.Receipt.Id</h4>
+            @if (Model.Receipt.IsReturned)
+            {
+                <span class="badge bg-danger">Returned</span>
+            }
+            else if (!Model.Receipt.IsOpen)
+            {
+                <span class="badge bg-success">Closed</span>
+            }
+            else
+            {
+                <span class="badge bg-warning">Open</span>
+            }
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Customer Information</h5>
+                    <p><strong>Name:</strong> @Model.Receipt.UserFullName</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Receipt Details</h5>
+                    <p><strong>Created At:</strong> @Model.Receipt.CreatedAt.ToString("g")</p>
+                    <p><strong>Total Amount:</strong> @Model.Receipt.PaidAmount.ToString("C")</p>
+                </div>
+            </div>
+
+            <h5 class="mt-4">Products</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var product in Model.Receipt.Products)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td>@product.Quantity</td>
+                        <td>@product.UnitPrice.ToString("C")</td>
+                        <td>@((product.Quantity * product.UnitPrice).ToString("C"))</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            @if (!Model.Receipt.IsReturned)
+            {
+                <form method="post" asp-page-handler="ReturnReceipt">
+                    <input type="hidden" name="id" value="@Model.Receipt.Id" />
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to return this receipt?');">
+                        Return Receipt
+                    </button>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    This receipt has already been returned and cannot be returned again.
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
