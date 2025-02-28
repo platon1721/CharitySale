@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
+
+/// <summary>
+/// Provides methods to manage money transactions.
+/// </summary>
 public class MoneyService : IMoneyService
 {
     private readonly AppDbContext _context;
@@ -40,6 +44,8 @@ public class MoneyService : IMoneyService
         return transactions.Select(MoneyTransactionMapper.MapToDto).ToList();
     }
     
+    
+    // Gets a transaction by its ID.
     public async Task<MoneyTransactionDto> GetByIdAsync(int id)
     {
         var transaction = await _context.MoneyTransactions
@@ -54,6 +60,8 @@ public class MoneyService : IMoneyService
         return MoneyTransactionMapper.MapToDto(transaction);
     }
     
+    
+    // Adds a sale transaction to the database.
     public async Task<MoneyTransactionDto> AddSaleTransactionAsync(int receiptId, decimal amount)
     {
         var transaction = MoneyTransactionMapper.MapFromSale(receiptId, amount);
@@ -64,6 +72,8 @@ public class MoneyService : IMoneyService
         return MoneyTransactionMapper.MapToDto(transaction);
     }
     
+    
+    // Adds a return transaction to the database.
     public async Task<MoneyTransactionDto> AddReturnTransactionAsync(int receiptId, decimal amount)
     {
         var transaction = MoneyTransactionMapper.MapFromReturn(receiptId, amount);

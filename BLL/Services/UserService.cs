@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
+
+/// <summary>
+/// Service for managing users, including CRUD operations and user retrieval by login.
+/// </summary>
 public class UserService: IUserService
 {
     
@@ -16,6 +20,8 @@ public class UserService: IUserService
         _context = context;
     }
     
+    
+    // Retrieves all users from the database.
     public async Task<List<UserDto>> GetAllAsync()
     {
         var users = await _context.Users
@@ -25,6 +31,8 @@ public class UserService: IUserService
         return users.Select(UserMapper.MapToDto).ToList();
     }
 
+    
+    // Retrieves a user by his unique identifier.
     public async Task<UserDto> GetByIdAsync(int id)
     {
         var user = await _context.Users
@@ -39,6 +47,7 @@ public class UserService: IUserService
         return UserMapper.MapToDto(user);
     }
 
+    // Creates a new user in the database.
     public async Task<UserDto> CreateAsync(CreateUserDto dto)
     {
         
@@ -47,7 +56,7 @@ public class UserService: IUserService
     
         if (existingUser != null)
         {
-            throw new DuplicateException($"Login {dto.Login} on juba kasutusel");
+            throw new DuplicateException($"Login {dto.Login} is already in use");
         }
         
         var user = UserMapper.MapFromCreateDto(dto);
@@ -58,6 +67,7 @@ public class UserService: IUserService
         return UserMapper.MapToDto(user);
     }
 
+    // Updates an existing user.
     public async Task<UserDto> UpdateAsync(int id, CreateUserDto dto)
     {
         var user = _context.Users.FirstOrDefault(u => u.Id == id);
@@ -75,6 +85,7 @@ public class UserService: IUserService
         return UserMapper.MapToDto(user);
     }
 
+    // Deletes a user from the database.
     public async Task DeleteAsync(int id)
     {
         var user = _context.Users.FirstOrDefault(u => u.Id == id);
@@ -88,6 +99,7 @@ public class UserService: IUserService
         await _context.SaveChangesAsync();
     }
     
+    // Retrieves a user by their login.
     public async Task<UserDto> GetByLoginAsync(string login)
     {
         var user = await _context.Users

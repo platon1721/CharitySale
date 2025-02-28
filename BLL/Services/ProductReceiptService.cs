@@ -89,10 +89,16 @@ public class ProductReceiptService : IProductReceiptService
         }
     }
 
+    /// <summary>
+    /// Method to remove product from the receipt.
+    /// </summary>
+    /// <param name="receiptId">Unique identifier of the receipt where from to delete the product</param>
+    /// <param name="productId">Unique identifier of the product to be deleted.</param>
+    /// <returns>Receipt DTO, without product.</returns>
+    /// <exception cref="NotFoundException">
+    /// Would be thrown if the product is not in the receipt or receipt is not found</exception>
     public async Task<ReceiptDto> RemoveProductAsync(int receiptId, int productId)
     {
-        Console.WriteLine(receiptId); //14
-        Console.WriteLine(productId); //0
         using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
         try
         {
@@ -113,15 +119,15 @@ public class ProductReceiptService : IProductReceiptService
             var product = receiptProduct.Product;
             var receipt = receiptProduct.Receipt;
 
-            // Tagasta toote kogus lattu
+            // Return product into the stock
             product.Stock += receiptProduct.Quantity;
             product.ModifiedAt = DateTime.UtcNow;
 
-            // Lahuta toote hind retsepti kogusummast
+            // Manage quantity of the product from the raceipt
             receipt.PaidAmount -= (product.Price * receiptProduct.Quantity);
             receipt.ModifiedAt = DateTime.UtcNow;
 
-            // Eemalda toode retseptist
+            // delete product fro the receipt
             _context.ReceiptProducts.Remove(receiptProduct);
 
             await _context.SaveChangesAsync();

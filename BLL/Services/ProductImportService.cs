@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
+
+/// <summary>
+/// Service for importing products from configuration files.
+/// </summary>
 public class ProductImportService : IProductImportService
 {
     private readonly AppDbContext _context;
@@ -17,6 +21,8 @@ public class ProductImportService : IProductImportService
         _configService = configService;
     }
 
+    
+    // Imports products from a provided configuration file.
     public async Task<ImportResult> ImportProductsFromFileAsync(IFormFile configFile)
     {
         var result = new ImportResult();
@@ -35,6 +41,8 @@ public class ProductImportService : IProductImportService
         return result;
     }
 
+    
+    // Imports products from the default configuration file.
     public async Task<ImportResult> ImportProductsFromDefaultConfigAsync()
     {
         var result = new ImportResult();
@@ -53,6 +61,7 @@ public class ProductImportService : IProductImportService
         return result;
     }
 
+    // Imports products based on the provided list of product import DTOs.
     private async Task<ImportResult> ImportProductsAsync(List<ProductImportDto> productsToImport)
     {
         var result = new ImportResult

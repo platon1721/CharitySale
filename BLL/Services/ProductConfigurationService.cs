@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace BLL.Services;
 
+
+/// <summary>
+/// Service for managing product configurations.
+/// </summary>
 public class ProductConfigurationService : IProductConfigurationService
 {
     private readonly IWebHostEnvironment _environment;
@@ -14,6 +18,8 @@ public class ProductConfigurationService : IProductConfigurationService
         _environment = environment;
     }
 
+    
+    // Reads products from a provided configuration file.
     public async Task<List<ProductImportDto>> ReadProductsFromConfigAsync(IFormFile configFile)
     {
         try
@@ -37,6 +43,8 @@ public class ProductConfigurationService : IProductConfigurationService
         }
     }
 
+    
+    // Reads products from the default configuration file.
     public async Task<List<ProductImportDto>> ReadProductsFromDefaultConfigAsync()
     {
         var configPath = Path.Combine(_environment.ContentRootPath, "Config", "products.json");

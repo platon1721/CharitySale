@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
+
+/// <summary>
+/// Service for managing product types, including CRUD operations.
+/// </summary>
 public class ProductTypeService: IProductTypeService
 {
     
@@ -16,6 +20,7 @@ public class ProductTypeService: IProductTypeService
         _context = context;
     }
     
+    // Retrieves all product types from the database.
     public async Task<List<ProductTypeDto>> GetAllAsync()
     {
         var productTypes = await _context.ProductTypes
@@ -25,6 +30,8 @@ public class ProductTypeService: IProductTypeService
         return productTypes.Select(ProductTypeMapper.MapToDto).ToList();
     }
 
+    
+    // Retrieves a product type by its identifier.
     public async Task<ProductTypeDto> GetByIdAsync(int id)
     {
         var productType = await _context.ProductTypes
@@ -39,6 +46,8 @@ public class ProductTypeService: IProductTypeService
         return ProductTypeMapper.MapToDto(productType);
     }
 
+    
+    // Creates a new product type in the database.
     public async Task<ProductTypeDto> CreateAsync(CreateProductTypeDto dto)
     {
         var productType = ProductTypeMapper.MapFromCreateDto(dto);
@@ -49,6 +58,7 @@ public class ProductTypeService: IProductTypeService
         return ProductTypeMapper.MapToDto(productType);
     }
 
+    // Updates an existing product type in the database.
     public async Task<ProductTypeDto> UpdateAsync(int id, CreateProductTypeDto dto)
     {
         var productType = await _context.ProductTypes.FindAsync(id);
@@ -66,6 +76,7 @@ public class ProductTypeService: IProductTypeService
         return ProductTypeMapper.MapToDto(productType);
     }
 
+    // Deletes a product type from the database.
     public async Task DeleteAsync(int id)
     {
         var productType = await _context.ProductTypes.FindAsync(id);
