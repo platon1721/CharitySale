@@ -3,8 +3,17 @@ using Domain.Entities;
 
 namespace BLL.Mappers;
 
+/// <summary>
+/// Provides mapping methods for converting between Product entities and ProductDto DTOs.
+/// </summary>
 public static class ProductMapper
 {
+    
+    ///  /// <summary>
+    /// Maps a Product entity to a ProductDto>.
+    /// </summary>
+    /// <param name="entity">The product entity to map.</param>
+    /// <returns>A DTO representing the product.</returns>
     public static ProductDto MapToDto(Product entity)
     {
         return new ProductDto
@@ -21,6 +30,12 @@ public static class ProductMapper
         };
     }
     
+    
+    /// /// <summary>
+    /// Maps a CreateProductDto to a Product entity.
+    /// </summary>
+    /// <param name="dto">The DTO containing product creation data.</param>
+    /// <returns>A new product entity.</returns>
     public static Product MapToEntity(CreateProductDto dto)
     {
         return new Product
@@ -35,6 +50,11 @@ public static class ProductMapper
         };
     }
     
+    /// /// <summary>
+    /// Maps a ProductDto to a Product entity.
+    /// </summary>
+    /// <param name="dto">The DTO containing product data.</param>
+    /// <returns>A product entity.</returns>
     public static Product MapToEntity(ProductDto dto)
     {
         return new Product

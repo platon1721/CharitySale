@@ -3,8 +3,18 @@ using Domain.Entities;
 
 namespace BLL.Mappers;
 
+
+/// <summary>
+/// Provides mapping methods for converting between MoneyTransaction entities and MoneyTransactionDto DTOs.
+/// </summary>
 public class MoneyTransactionMapper
 {
+    
+    /// <summary>
+    /// Maps a MoneyTransaction entity to a MoneyTransactionDto.
+    /// </summary>
+    /// <param name="entity">The money transaction entity to map.</param>
+    /// <returns>A DTO representing the money transaction.</returns>
     public static MoneyTransactionDto MapToDto(MoneyTransaction entity)
     {
         return new MoneyTransactionDto
@@ -18,6 +28,13 @@ public class MoneyTransactionMapper
         };
     }
     
+    
+    /// <summary>
+    /// Creates a new MoneyTransaction entity for a sale transaction.
+    /// </summary>
+    /// <param name="receiptId">The ID of the receipt associated with the transaction.</param>
+    /// <param name="amount">The amount of the sale.</param>
+    /// <returns>A new money transaction entity representing the sale.</returns>
     public static MoneyTransaction MapFromSale(int receiptId, decimal amount)
     {
         return new MoneyTransaction
@@ -31,6 +48,12 @@ public class MoneyTransactionMapper
         };
     }
     
+    /// <summary>
+    /// Creates a new MoneyTransaction entity for a return transaction.
+    /// </summary>
+    /// <param name="receiptId">The ID of the receipt associated with the return transaction.</param>
+    /// <param name="amount">The amount to be refunded.</param>
+    /// <returns>A new money transaction entity representing the return.</returns>
     public static MoneyTransaction MapFromReturn(int receiptId, decimal amount)
     {
         return new MoneyTransaction

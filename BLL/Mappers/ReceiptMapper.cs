@@ -4,8 +4,19 @@ using Domain.Entities;
 
 namespace BLL.Mappers;
 
+/// <summary>
+/// Provides mapping methods for converting between Receipt entities and DTOs.
+/// </summary>
 public static class ReceiptMapper
 {
+    
+    
+    /// <summary>
+    /// Maps a Receipt entity to a ReceiptDto.
+    /// </summary>
+    /// <param name="entity">The receipt entity to map.</param>
+    /// <param name="context">Optional database context to check related transactions.</param>
+    /// <returns>A DTO representing the receipt.</returns>
     public static ReceiptDto MapToDto(Receipt entity, AppDbContext context = null)
     {
         var dto = new ReceiptDto
@@ -35,6 +46,11 @@ public static class ReceiptMapper
         return dto;
     }
 
+    /// <summary>
+    /// Maps a ReceiptDto to a Receipt entity.
+    /// </summary>
+    /// <param name="dto">The DTO containing receipt data.</param>
+    /// <returns>A receipt entity.</returns>
     public static Receipt MapToEntity(ReceiptDto dto)
     {
         return new Receipt
@@ -42,10 +58,15 @@ public static class ReceiptMapper
             Id = dto.Id,
             PaidAmount = dto.PaidAmount,
             ModifiedAt = DateTime.UtcNow
-
         };
     }
     
+    
+    /// <summary>
+    /// Maps a CreateReceiptDto to a new Receipt entity.
+    /// </summary>
+    /// <param name="dto">The DTO containing receipt creation data.</param>
+    /// <returns>A new receipt entity.</returns>
     public static Receipt MapFromCreateDto(CreateReceiptDto dto)
     {
         return new Receipt
@@ -64,6 +85,12 @@ public static class ReceiptMapper
         };
     }
     
+    
+    /// <summary>
+    /// Maps a ReceiptProduct entity to a ReceiptProductDto.
+    /// </summary>
+    /// <param name="entity">The receipt product entity to map.</param>
+    /// <returns>A DTO representing the receipt product.</returns>
     private static ReceiptProductDto MapReceiptProductToDto(ReceiptProduct entity)
     {
         return new ReceiptProductDto
