@@ -64,6 +64,10 @@ When importing products, make sure to use these product type IDs.
 ### Domain
 - Entities
 
+## Swagger
+API dokumentatsioon on kättesaadav Swagger UI kaudu:
+  http://localhost:5052/Swagger/
+
 ## Entity Diagram
 
 ![ERD](Seller.drawio.png)

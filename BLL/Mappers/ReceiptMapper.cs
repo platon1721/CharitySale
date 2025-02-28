@@ -6,28 +6,6 @@ namespace BLL.Mappers;
 
 public static class ReceiptMapper
 {
-    // public static ReceiptDto MapToDto(Receipt entity)
-    // {
-    //     return new ReceiptDto
-    //     {
-    //         Id = entity.Id,
-    //         UserFullName = entity.User != null 
-    //             ? $"{entity.User.Firstname} {entity.User.Surname}" 
-    //             : "Unknown User",
-    //         PaidAmount = entity.PaidAmount,
-    //         CreatedAt = entity.CreatedAt,
-    //         Products = entity.ReceiptProducts
-    //             .Select(rp => new ReceiptProductDto
-    //             {
-    //                 ProductId = rp.ProductId,
-    //                 ProductName = rp.Product.Name,
-    //                 Quantity = rp.Quantity,
-    //                 UnitPrice = rp.UnitPrice
-    //             })
-    //             .ToList()
-    //     };
-    // }
-    
     public static ReceiptDto MapToDto(Receipt entity, AppDbContext context = null)
     {
         var dto = new ReceiptDto
@@ -47,13 +25,10 @@ public static class ReceiptMapper
                 })
                 .ToList()
         };
-
-        // Kontrollime ainult siis, kui context on olemas
         if (context != null)
         {
             dto.IsOpen = !context.MoneyTransactions.Any(mt => mt.ReceiptId == entity.Id);
-    
-            // Kontrollime, kas eksisteerib return tüüpi transaction selle retsepti jaoks
+            
             dto.IsReturned = dto.IsReturned || context.MoneyTransactions
                 .Any(mt => mt.ReceiptId == entity.Id && mt.Type == TransactionType.Return);
         }
