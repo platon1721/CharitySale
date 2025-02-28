@@ -63,3 +63,7 @@ When importing products, make sure to use these product type IDs.
 - Seeding
 ### Domain
 - Entities
+
+## Entity Diagram
+
+![ERD](Seller.drawio.png)

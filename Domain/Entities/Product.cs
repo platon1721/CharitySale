@@ -17,9 +17,8 @@ public class Product: BaseEntity
     [Range(0, int.MaxValue)] public int Stock { get; set; } = 0;
     
     [MaxLength(2048)] public string? ImageUrl { get; set; }
-    
-    [Timestamp]
-    public byte[] RowVersion { get; set; } = null!;
+
+    [Timestamp] public byte[] RowVersion { get; set; } = null!;
     
     public bool IsInStock => Stock > 0;
     
