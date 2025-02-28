@@ -65,7 +65,6 @@ public class MoneyTransactionsController: ControllerBase
     public async Task<ActionResult<MoneyTransactionDto>> AddSaleTransaction(
         [FromBody] SaleReturnTransactionDto dto)
     {
-        Console.WriteLine($"Received sale transaction. ReceiptId: {dto.ReceiptId}, Amount: {dto.Amount}");
 
         var transaction = await _moneyService.AddSaleTransactionAsync(dto.ReceiptId, dto.Amount);
         return Ok(transaction);

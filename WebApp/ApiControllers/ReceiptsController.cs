@@ -30,17 +30,6 @@ public class ReceiptsController : ControllerBase
        return Ok(receipts);
    }
    
-   // [HttpGet("open")]
-   // [ProducesResponseType(StatusCodes.Status200OK)]
-   // [SwaggerOperation(
-   //     Summary = "Get open receipts", 
-   //     Description = "Retrieves a list of open receipts for a user")]
-   // public async Task<ActionResult<List<ReceiptDto>>> GetOpenReceipts(
-   //     [FromQuery] int userId)
-   // {
-   //     var openReceipts = await _receiptService.GetOpenReceiptsAsync(userId);
-   //     return Ok(openReceipts);
-   // }
    
    [HttpGet("user/{userId}")]
    [ProducesResponseType(StatusCodes.Status200OK)]
@@ -76,21 +65,12 @@ public class ReceiptsController : ControllerBase
    {
        try
        {
-           // Lisage silumine
-           Console.WriteLine($"CreateReceipt - Received UserId: {dto.UserId}");
-        
            var receipt = await _receiptService.CreateAsync(dto);
-        
-           // Lisage silumine
-           Console.WriteLine($"CreateReceipt - Created Receipt ID: {receipt.Id}");
-        
+           
            return CreatedAtAction(nameof(GetById), new { id = receipt.Id }, receipt);
        }
        catch (Exception ex)
        {
-           // Täpsem veateate logimine
-           Console.WriteLine($"CreateReceipt - Error: {ex.Message}");
-           Console.WriteLine($"Stack trace: {ex.StackTrace}");
         
            return StatusCode(500, new { 
                message = "An error occurred while creating the receipt.", 
@@ -123,17 +103,8 @@ public class ReceiptsController : ControllerBase
    public async Task<IActionResult> Delete(
        [SwaggerParameter("Unique identifier of the receipt to delete")] int id)
    {
-       try
-       {
-           Console.WriteLine($"DeleteReceiptAPI:{id}");
-            await _receiptService.DeleteAsync(id);
-            return NoContent();
-       }
-       catch (Exception e)
-       {
-           Console.WriteLine(e);
-           throw;
-       };
+       await _receiptService.DeleteAsync(id);
+       return NoContent();
    }
    
    [HttpPost("{id}/restore-stock")]
@@ -174,20 +145,4 @@ public class ReceiptsController : ControllerBase
        var receipt = await _receiptService.AddProductToReceiptAsync(receiptId, dto);
        return Ok(receipt);
    }
-
-   // [HttpPut("{receiptId}/products/{productId}")]
-   // [ProducesResponseType(StatusCodes.Status200OK)]
-   // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-   // [ProducesResponseType(StatusCodes.Status404NotFound)]
-   // [SwaggerOperation(
-   //     Summary = "Update product quantity in receipt", 
-   //     Description = "Updates the quantity of a specific product in a receipt")]
-   // public async Task<ActionResult<ReceiptDto>> UpdateProductQuantity(
-   //     [SwaggerParameter("Unique identifier of the receipt")] int receiptId, 
-   //     [SwaggerParameter("Unique identifier of the product")] int productId, 
-   //     [SwaggerParameter("New product quantity details")] [FromBody] UpdateReceiptProductQuantityDto dto)
-   // {
-   //     var receipt = await _receiptService.UpdateProductQuantityAsync(receiptId, productId, dto);
-   //     return Ok(receipt);
-   // }
 }

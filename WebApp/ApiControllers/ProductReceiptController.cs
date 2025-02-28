@@ -28,8 +28,6 @@ public class ProductReceiptController : ControllerBase
     [HttpDelete("{productId}")]
     public async Task<ActionResult<ReceiptDto>> RemoveProduct(int receiptId, int productId)
     {
-        Console.WriteLine(receiptId); //14
-        Console.WriteLine(productId); //0
         var receipt = await _productReceiptService.RemoveProductAsync(receiptId, productId);
         return Ok(receipt);
     }
