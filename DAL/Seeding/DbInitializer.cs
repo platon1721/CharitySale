@@ -17,10 +17,10 @@ namespace DAL.Seeding
             {
                 var context = services.GetRequiredService<AppDbContext>();
                 
-                // Veendume, et andmebaas on loodud (ja kasutame migratsioone, kui need on olemas)
+                // Check if db is done
                 context.Database.Migrate();
                 
-                // Külvame andmed
+                // Adding data
                 SeedData(context);
             }
             catch (Exception ex)
@@ -30,6 +30,7 @@ namespace DAL.Seeding
             }
         }
 
+        // Default data adding.
         private static void SeedData(AppDbContext context)
         {
             // Check if DB has already data
