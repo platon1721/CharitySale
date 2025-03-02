@@ -25,6 +25,8 @@ public static class ReceiptMapper
             UserFullName = UserMapper.MapToDto(entity.User).FullName,
             PaidAmount = entity.PaidAmount,
             CreatedAt = entity.CreatedAt,
+            IsReturned = entity.IsDeleted,
+            ReturnedAt = entity.DeletedAt,
             Products = entity.ReceiptProducts
                 .Where(rp => rp.Product != null)
                 .Select(rp => new ReceiptProductDto
@@ -39,9 +41,6 @@ public static class ReceiptMapper
         if (context != null)
         {
             dto.IsOpen = !context.MoneyTransactions.Any(mt => mt.ReceiptId == entity.Id);
-            
-            dto.IsReturned = dto.IsReturned || context.MoneyTransactions
-                .Any(mt => mt.ReceiptId == entity.Id && mt.Type == TransactionType.Return);
         }
         return dto;
     }
@@ -57,7 +56,9 @@ public static class ReceiptMapper
         {
             Id = dto.Id,
             PaidAmount = dto.PaidAmount,
-            ModifiedAt = DateTime.UtcNow
+            ModifiedAt = DateTime.UtcNow,
+            IsDeleted = dto.IsReturned,
+            DeletedAt = dto.ReturnedAt
         };
     }
     
@@ -82,23 +83,6 @@ public static class ReceiptMapper
                     UnitPrice = 0
                 })
                 .ToList()
-        };
-    }
-    
-    
-    /// <summary>
-    /// Maps a ReceiptProduct entity to a ReceiptProductDto.
-    /// </summary>
-    /// <param name="entity">The receipt product entity to map.</param>
-    /// <returns>A DTO representing the receipt product.</returns>
-    private static ReceiptProductDto MapReceiptProductToDto(ReceiptProduct entity)
-    {
-        return new ReceiptProductDto
-        {
-            ProductId = entity.ProductId,
-            ProductName = entity.Product.Name,
-            Quantity = entity.Quantity,
-            UnitPrice = entity.UnitPrice
         };
     }
 }

@@ -26,7 +26,9 @@ public static class ProductMapper
             ImageUrl = entity.ImageUrl,
             ProductTypeName = entity.ProductType.Name,
             ProductTypeId = entity.ProductTypeId,
-            IsInStock = entity.Stock > 0
+            IsInStock = entity.Stock > 0,
+            IsDeleted = entity.IsDeleted,
+            DeletedAt = entity.DeletedAt
         };
     }
     

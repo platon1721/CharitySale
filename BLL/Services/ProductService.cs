@@ -2,6 +2,7 @@ using BLL.DTO;
 using BLL.Exceptions;
 using BLL.Mappers;
 using DAL.Context;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
@@ -25,6 +26,16 @@ public class ProductService: IProductService
     public async Task<List<ProductDto>> GetAllAsync()
     {
         var products = await _context.Products
+            .Include(p => p.ProductType)
+            .AsNoTracking()
+            .ToListAsync();
+        return products.Select(ProductMapper.MapToDto).ToList();
+    }
+
+    public async Task<List<ProductDto>> GetAllActiveAsync()
+    {
+        var products = await _context.Products
+            .Where(p => p.IsDeleted == false)
             .Include(p => p.ProductType)
             .AsNoTracking()
             .ToListAsync();
@@ -135,7 +146,10 @@ public class ProductService: IProductService
             throw new NotFoundException($"Product with id {id} was not found");
         }
         
-        _context.Products.Remove(product);
+        product.IsDeleted = true;
+        product.Stock = 0;
+        product.DeletedAt = DateTime.UtcNow;
+        
         await _context.SaveChangesAsync();
     }
     

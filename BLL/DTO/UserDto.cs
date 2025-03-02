@@ -4,7 +4,7 @@ namespace BLL.DTO;
 /// <summary>
 /// Data Transfer Object (DTO) representing a user.
 /// </summary>
-public class UserDto : BaseDto
+public class UserDto : BaseDeletableDto
 {
     
     /// <summary>

@@ -3,7 +3,7 @@ namespace BLL.DTO;
 /// <summary>
 /// Data Transfer Object (DTO) representing a product.
 /// </summary>
-public class ProductDto : BaseDto
+public class ProductDto : BaseDeletableDto
 {
     
     /// <summary>

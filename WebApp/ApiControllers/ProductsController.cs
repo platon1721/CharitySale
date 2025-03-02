@@ -21,7 +21,7 @@ public class ProductsController : ControllerBase
         _hostingEnvironment = hostingEnvironment;
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [SwaggerOperation(Summary = "Get all products", Description = "Retrieves a list of all products")]
@@ -31,11 +31,21 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
     
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Get all active products", Description = "Retrieves a list of all products that were not deleted")]
+    public async Task<ActionResult<List<ProductDto>>> GetAllActive()
+    {
+        var products = await _productService.GetAllActiveAsync();
+        return Ok(products);
+    }
+    
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Get product", Description = "Retrieves a product")]
-    public async Task<ActionResult<List<ProductDto>>> GetById(int id)
+    [SwaggerOperation(Summary = "Get product", Description = "Retrieves a product by Id")]
+    public async Task<ActionResult<ProductDto>> GetById(int id)
     {
         var product = await _productService.GetByIdAsync(id);
         return Ok(product);
@@ -73,6 +83,8 @@ public class ProductsController : ControllerBase
     [SwaggerOperation(Summary = "Delete product", Description = "Delete the product")]
     public async Task<ActionResult<ProductDto>> Delete(int id)
     {
+        Console.WriteLine("Deleting product");
+        Console.WriteLine(id);
         await _productService.DeleteAsync(id);
         return NoContent();
     }

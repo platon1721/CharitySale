@@ -77,6 +77,8 @@ public class ProductTypeService: IProductTypeService
     }
 
     // Deletes a product type from the database.
+    // Need to think how to use soft delete here. Mb add basic product type like "other products"
+    // or "No category products".
     public async Task DeleteAsync(int id)
     {
         var productType = await _context.ProductTypes.FindAsync(id);

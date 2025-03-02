@@ -95,7 +95,8 @@ public class UserService: IUserService
             throw new NotFoundException($"User with id {id} not found");
         }
         
-        _context.Users.Remove(user);
+        user.IsDeleted = true;
+        user.DeletedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
     }
     
@@ -104,7 +105,7 @@ public class UserService: IUserService
     {
         var user = await _context.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Login == login);
+            .FirstOrDefaultAsync(u => u.Login == login && u.IsDeleted == false);
     
         if (user == null)
         {

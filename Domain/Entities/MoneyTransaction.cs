@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 
-public class MoneyTransaction: BaseEntity
+public class MoneyTransaction: BaseDeletableEntity
 {
     
     [Required]
@@ -19,6 +19,7 @@ public class MoneyTransaction: BaseEntity
     [Required]
     [MaxLength(255)]
     public string Description { get; set; } = default!;
+    
 }
 
 public enum TransactionType

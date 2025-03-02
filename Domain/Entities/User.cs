@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 
-public class User: BaseEntity
+public class User: BaseDeletableEntity
 {
     
     [MaxLength (128)]

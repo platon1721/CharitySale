@@ -24,7 +24,9 @@ public class MoneyTransactionMapper
             Description = entity.Description,
             Type = entity.Type,
             ReceiptId = entity.ReceiptId,
-            CreatedAt = entity.CreatedAt
+            CreatedAt = entity.CreatedAt,
+            IsDeleted = entity.IsDeleted,
+            DeletedAt = entity.DeletedAt,
         };
     }
     

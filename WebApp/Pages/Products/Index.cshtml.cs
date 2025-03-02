@@ -26,7 +26,7 @@ namespace WebApp.Pages.Products
 
             try 
             {
-                var response = await _httpClient.GetAsync("api/Products");
+                var response = await _httpClient.GetAsync("api/Products/all");
             
                 if (response.IsSuccessStatusCode)
                 {

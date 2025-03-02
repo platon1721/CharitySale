@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 
-public class Receipt: BaseEntity
+public class Receipt: BaseDeletableEntity
 {
     public int UserId { get; set; }
     public virtual User User { get; set; } = null!;

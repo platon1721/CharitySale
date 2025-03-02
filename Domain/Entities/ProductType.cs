@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 
-public class ProductType: BaseEntity
+public class ProductType: BaseDeletableEntity
 {
     [MaxLength(50)]
     public string Name { get; set; } = null!;

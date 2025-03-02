@@ -23,6 +23,8 @@ public static class UserMapper
             Surname = entity.Surname,
             Login = entity.Login,
             IsAdmin = entity.IsAdmin,
+            IsDeleted = entity.IsDeleted,
+            DeletedAt = entity.DeletedAt,
         };
     }
 
@@ -39,7 +41,9 @@ public static class UserMapper
             Firstname = dto.Firstname,
             Surname = dto.Surname,
             Login = dto.Login,
-            IsAdmin = dto.IsAdmin
+            IsAdmin = dto.IsAdmin,
+            IsDeleted = dto.IsDeleted,
+            DeletedAt = dto.DeletedAt,
         };
     }
 

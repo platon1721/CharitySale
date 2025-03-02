@@ -37,7 +37,7 @@ public class ReceiptService: IReceiptService
 
         return receipts.Select(receipt => ReceiptMapper.MapToDto(receipt, _context)).ToList();
     }
-
+    
     // Retrieves a receipt by its unique identifier.
     public async Task<ReceiptDto> GetByIdAsync(int id)
     {
@@ -156,6 +156,8 @@ public class ReceiptService: IReceiptService
                 throw new NotFoundException($"Receipt with id {id} not found");
             }
             
+            receipt.IsDeleted = true;
+            receipt.DeletedAt = DateTime.UtcNow;
             receipt.ModifiedAt = DateTime.UtcNow;
 
             // Update in stock amounts of products

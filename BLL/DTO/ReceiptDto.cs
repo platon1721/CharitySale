@@ -35,4 +35,6 @@ public class ReceiptDto : BaseDto
     /// Gets or sets a value indicating whether the receipt has been returned.
     /// </summary>
     public bool IsReturned { get; set; } = false;
+    
+    public DateTime? ReturnedAt { get; set; }
 }

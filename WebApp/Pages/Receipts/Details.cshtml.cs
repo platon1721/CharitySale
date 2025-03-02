@@ -56,7 +56,7 @@ namespace WebApp.Pages.Receipts
 
                 if (responseTransaction.IsSuccessStatusCode && responseReceipt.IsSuccessStatusCode)
                 {
-                    return RedirectToPage("/Receipts/Index");
+                    return RedirectToPage("./Details", new { id });
                 }
 
                 await responseTransaction.Content.ReadAsStringAsync();

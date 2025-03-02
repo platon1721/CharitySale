@@ -6,13 +6,8 @@ namespace BLL.DTO;
 /// <summary>
 /// Data Transfer Object (DTO) representing a money transaction.
 /// </summary>
-public class MoneyTransactionDto
+public class MoneyTransactionDto : BaseDeletableDto
 {
-    /// <summary>
-    /// Gets or sets the unique identifier for the transaction.
-    /// </summary>
-    public int Id { get; set; }
-    
     /// <summary>
     /// Gets or sets the amount of money involved in the transaction.
     /// </summary>

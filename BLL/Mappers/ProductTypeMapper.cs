@@ -20,7 +20,9 @@ public class ProductTypeMapper
         return new ProductTypeDto
         {
             Id = entity.Id,
-            Name = entity.Name
+            Name = entity.Name,
+            IsDeleted = entity.IsDeleted,
+            DeletedAt = entity.DeletedAt
         };
     }
     
@@ -35,7 +37,9 @@ public class ProductTypeMapper
         {
             Id = dto.Id,
             Name = dto.Name,
-            ModifiedAt = DateTime.UtcNow
+            ModifiedAt = DateTime.UtcNow,
+            IsDeleted = dto.IsDeleted,
+            DeletedAt = dto.DeletedAt
         };
     }
     
