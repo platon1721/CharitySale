@@ -51,7 +51,9 @@
                 @foreach (var product in Model.Receipt.Products)
                 {
                     <tr>
-                        <td>@product.ProductName</td>
+                        <td>
+                            <a asp-page="/Products/Details" asp-route-id="@product.ProductId">@product.ProductName</a>
+                        </td>
                         <td>@product.Quantity</td>
                         <td>@product.UnitPrice.ToString("C")</td>
                         <td>@((product.Quantity * product.UnitPrice).ToString("C"))</td>
