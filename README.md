@@ -51,7 +51,7 @@ The system uses the following product types by default:
 When importing products, make sure to use these product type IDs.
 
 ### Import from file
-You can import from file products confugurations. For that you can use a default config file or load your own. An example json file is given. if you would like, you can olso modify default config file, that is located WebApp/Config/products.json
+You can import from file products confugurations. For that you can use a default config file or load your own. An example json file is given. if you would like, you can also modify default config file, that is located WebApp/Config/products.json
 
 
 ## Project Structure
