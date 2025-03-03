@@ -9,7 +9,7 @@ This project was developed by Platon Matsinski as part of the Enefit internship 
 ## Installation
 ### 1. Clone the repository
 ### 2. Configure the database
-The project comes with preconfigured connection strings in appsettings.json:
+The project comes with preconfigured connection strings in appsettings.json and appsettings.Development.json:
 
     "ConnectionStrings": {
         "DefaultConnection": "Host=db;Database=bakesale;Username=postgres;Password=postgres",
@@ -20,6 +20,7 @@ You can use the LocalConnection for development, or modify it based on your Post
 ### 3. Apply migrations
     cd WebApp
     dotnet ef database update
+    or dotnet ef database update --project DAL  (from SaleManagerHW folder)
 ### 4. Run the application
     dotnet run
 ### 5. Browser
