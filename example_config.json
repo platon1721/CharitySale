@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "name": "Chocolate Cake",
+      "description": "Rich chocolate cake with layers of ganache",
+      "price": 4.50,
+      "stock": 8,
+      "productTypeId": 1
+    },
+    {
+      "name": "Croissant",
+      "description": "Buttery, flaky French pastry",
+      "price": 2.20,
+      "stock": 12,
+      "productTypeId": 1
+    },
+    {
+      "name": "Orange Juice",
+      "description": "Freshly squeezed orange juice",
+      "price": 2.30,
+      "stock": 30,
+      "productTypeId": 2
+    },
+    {
+      "name": "Lemonade",
+      "description": "Refreshing homemade lemonade with mint",
+      "price": 1.90,
+      "stock": 25,
+      "productTypeId": 2
+    },
+    {
+      "name": "Hoodie",
+      "description": "Warm cotton hoodie with front pocket",
+      "price": 12.00,
+      "stock": 10,
+      "productTypeId": 3
+    },
+    {
+      "name": "Baseball Cap",
+      "description": "Adjustable cotton baseball cap",
+      "price": 7.50,
+      "stock": 15,
+      "productTypeId": 3
+    }
+  ]
+}
