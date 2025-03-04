@@ -13,4 +13,6 @@ public interface IReceiptService
     Task DeleteAsync(int id);
 
     Task<ReceiptDto> AddProductToReceiptAsync(int receiptId, AddProductToReceiptDto dto);
+    
+    Task<ReceiptDto> CloseReceipt(int receiptId);
 }

@@ -15,16 +15,16 @@ public static class ReceiptMapper
     /// Maps a Receipt entity to a ReceiptDto.
     /// </summary>
     /// <param name="entity">The receipt entity to map.</param>
-    /// <param name="context">Optional database context to check related transactions.</param>
     /// <returns>A DTO representing the receipt.</returns>
-    public static ReceiptDto MapToDto(Receipt entity, AppDbContext context = null)
-    {
+    public static ReceiptDto MapToDto(Receipt entity)
+    { 
         var dto = new ReceiptDto
         {
             Id = entity.Id,
             UserFullName = UserMapper.MapToDto(entity.User).FullName,
             PaidAmount = entity.PaidAmount,
             CreatedAt = entity.CreatedAt,
+            IsOpen = entity.IsOpen,
             IsReturned = entity.IsDeleted,
             ReturnedAt = entity.DeletedAt,
             Products = entity.ReceiptProducts
@@ -38,10 +38,6 @@ public static class ReceiptMapper
                 })
                 .ToList()
         };
-        if (context != null)
-        {
-            dto.IsOpen = !context.MoneyTransactions.Any(mt => mt.ReceiptId == entity.Id);
-        }
         return dto;
     }
 
@@ -57,6 +53,7 @@ public static class ReceiptMapper
             Id = dto.Id,
             PaidAmount = dto.PaidAmount,
             ModifiedAt = DateTime.UtcNow,
+            IsOpen = dto.IsOpen,
             IsDeleted = dto.IsReturned,
             DeletedAt = dto.ReturnedAt
         };
@@ -68,11 +65,12 @@ public static class ReceiptMapper
     /// </summary>
     /// <param name="dto">The DTO containing receipt creation data.</param>
     /// <returns>A new receipt entity.</returns>
-    public static Receipt MapFromCreateDto(CreateReceiptDto dto)
+    public static Receipt MapFromCreateDto(CreateReceiptDto dto, User user)
     {
         return new Receipt
         {
             UserId = dto.UserId,
+            User = user,
             CreatedAt = DateTime.UtcNow,
             ModifiedAt = DateTime.UtcNow,
             ReceiptProducts = dto.Products

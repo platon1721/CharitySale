@@ -41,16 +41,15 @@ namespace WebApp.Pages.Receipts
             }
         }
 
-        public async Task<IActionResult> OnPostReturnReceiptAsync(int id)
+        public async Task<IActionResult> OnPostReturnReceiptAsync(int id, decimal amount)
         {
             try
             {
                 var transaction = new SaleReturnTransactionDto
                 {
                     ReceiptId = id,
-                    Amount = Receipt.PaidAmount
+                    Amount = amount
                 };
-        
                 var responseTransaction = await _httpClient.PostAsJsonAsync($"api/MoneyTransactions/return", transaction);
                 var responseReceipt = await _httpClient.PostAsync($"api/Receipts/{id}/restore-stock", null);
 

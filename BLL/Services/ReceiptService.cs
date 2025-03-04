@@ -35,7 +35,7 @@ public class ReceiptService: IReceiptService
             .AsNoTracking()
             .ToListAsync();
 
-        return receipts.Select(receipt => ReceiptMapper.MapToDto(receipt, _context)).ToList();
+        return receipts.Select(receipt => ReceiptMapper.MapToDto(receipt)).ToList();
     }
     
     // Retrieves a receipt by its unique identifier.
@@ -52,20 +52,20 @@ public class ReceiptService: IReceiptService
             throw new NotFoundException($"Receipt with id={id} not found");
         }
 
-        return ReceiptMapper.MapToDto(receipt, _context);
+        return ReceiptMapper.MapToDto(receipt);
     }
 
     
     // Creates a new receipt in the database.
     public async Task<ReceiptDto> CreateAsync(CreateReceiptDto dto)
     {
-        var receipt = ReceiptMapper.MapFromCreateDto(dto);
         var existingUser = await _context.Users.FindAsync(dto.UserId);
         if (existingUser == null)
         {
             throw new Exception($"User with ID {dto.UserId} not found");
         }
-
+        var receipt = ReceiptMapper.MapFromCreateDto(dto, existingUser);
+        
         await _context.Receipts.AddAsync(receipt);
         await _context.SaveChangesAsync();
 
@@ -83,7 +83,7 @@ public class ReceiptService: IReceiptService
             .AsNoTracking()
             .ToListAsync();
 
-        return userReceipts.Select(receipt => ReceiptMapper.MapToDto(receipt, _context)).ToList();
+        return userReceipts.Select(receipt => ReceiptMapper.MapToDto(receipt)).ToList();
     }
 
     
@@ -260,6 +260,40 @@ public class ReceiptService: IReceiptService
             .ThenInclude(rp => rp.Product)
             .FirstAsync(r => r.Id == receiptId);
     
-        return ReceiptMapper.MapToDto(updatedReceipt, _context);
+        return ReceiptMapper.MapToDto(updatedReceipt);
+    }
+
+    public async Task<ReceiptDto> CloseReceipt(int receiptId)
+    {
+        using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            // Find the receipt
+            var receipt = await _context.Receipts
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.Id == receiptId);
+            if (receipt == null)
+                throw new NotFoundException($"Receipt with id {receiptId} not found");
+            
+            receipt.IsOpen = false;
+            
+            await _context.SaveChangesAsync();
+    
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            if (transaction.GetDbTransaction().Connection != null)
+            {
+                await transaction.RollbackAsync();
+            }
+            throw;
+        }
+        
+        var updatedReceipt = await _context.Receipts
+            .FirstOrDefaultAsync(r => r.Id == receiptId);
+        
+        return ReceiptMapper.MapToDto(updatedReceipt);
     }
 }

@@ -66,7 +66,6 @@ public class ReceiptsController : ControllerBase
        try
        {
            var receipt = await _receiptService.CreateAsync(dto);
-           
            return CreatedAtAction(nameof(GetById), new { id = receipt.Id }, receipt);
        }
        catch (Exception ex)
@@ -143,6 +142,20 @@ public class ReceiptsController : ControllerBase
        [SwaggerParameter("Product details to add")] [FromBody] AddProductToReceiptDto dto)
    {
        var receipt = await _receiptService.AddProductToReceiptAsync(receiptId, dto);
+       return Ok(receipt);
+   }
+
+   [HttpPut("{receiptId}/close")]
+   [ProducesResponseType(StatusCodes.Status200OK)]
+   [ProducesResponseType(StatusCodes.Status400BadRequest)]
+   [ProducesResponseType(StatusCodes.Status404NotFound)]
+   [SwaggerOperation(
+       Summary = "Change the receipt status to closed",
+       Description = "Changes the receipt status IsOpen to false.")]
+   public async Task<ActionResult<ReceiptDto>> CloseReceipt(
+       [SwaggerParameter("Unique identifier of the receipt")] int receiptId)
+   {
+       var receipt = await _receiptService.CloseReceipt(receiptId);
        return Ok(receipt);
    }
 }

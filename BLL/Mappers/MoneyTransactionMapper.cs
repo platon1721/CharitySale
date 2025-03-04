@@ -57,7 +57,7 @@ public class MoneyTransactionMapper
     /// <param name="amount">The amount to be refunded.</param>
     /// <returns>A new money transaction entity representing the return.</returns>
     public static MoneyTransaction MapFromReturn(int receiptId, decimal amount)
-    {
+    { 
         return new MoneyTransaction
         {
             Amount = -amount,

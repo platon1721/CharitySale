@@ -9,6 +9,8 @@ public class Receipt: BaseDeletableEntity
 
     [Range(0, int.MaxValue)] public decimal PaidAmount { get; set; } = 0;
     
+    public bool IsOpen { get; set; } = true;
+    
     public virtual ICollection<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
 
     

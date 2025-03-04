@@ -54,7 +54,6 @@ namespace WebApp.Pages.Receipts
                 };
 
                 var response = await _httpClient.PostAsJsonAsync($"api/Receipts/{receiptId}/products", dto);
-                
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -179,29 +178,39 @@ namespace WebApp.Pages.Receipts
         {
             try
             {
-            
-                var dto = new 
+                var transactionDto = new 
                 { 
                     ReceiptId = receiptId, 
                     Amount = amount 
                 };
-                
-                var response = await _httpClient.PostAsJsonAsync($"api/MoneyTransactions/sale", dto);
-                if (response.IsSuccessStatusCode)
+        
+                var transactionResponse = await _httpClient.PostAsJsonAsync($"api/MoneyTransactions/sale", transactionDto);
+        
+                if (transactionResponse.IsSuccessStatusCode)
                 {
-                    return RedirectToPage("/Receipts/Index");
+                    var responseReceiptUpdate = await _httpClient.PutAsJsonAsync($"api/Receipts/{receiptId}/close", new { receiptId });
+            
+                    if (responseReceiptUpdate.IsSuccessStatusCode)
+                    {
+                        return RedirectToPage("/Receipts/Index");
+                    }
+                    else
+                    {
+                        var errorContent = await responseReceiptUpdate.Content.ReadAsStringAsync();
+                        ModelState.AddModelError(string.Empty, $"Failed to close receipt: {errorContent}");
+                        return Page();
+                    }
                 }
                 else
                 {
-                    await response.Content.ReadAsStringAsync();
-
-                    ModelState.AddModelError(string.Empty, "Failed to complete receipt");
+                    var errorContent = await transactionResponse.Content.ReadAsStringAsync();
+                    ModelState.AddModelError(string.Empty, $"Failed to create sale transaction: {errorContent}");
                     return Page();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An error occurred while completing the receipt");
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
                 return Page();
             }
         }

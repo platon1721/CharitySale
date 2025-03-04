@@ -139,7 +139,7 @@ public class ProductReceiptService : IProductReceiptService
                     .ThenInclude(rp => rp.Product)
                 .FirstAsync(r => r.Id == receiptId);
 
-            return ReceiptMapper.MapToDto(updatedReceipt, _context);
+            return ReceiptMapper.MapToDto(updatedReceipt);
         }
         catch
         {

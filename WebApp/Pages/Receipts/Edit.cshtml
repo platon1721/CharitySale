@@ -5,7 +5,7 @@
 }
 <div class="container-fluid">
 <div class="row">
-    <!-- Toote kategooriad -->
+    <!-- Product Types -->
     <div class="col-md-2 bg-light sidebar">
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             @foreach (var category in Model.ProductTypes)
@@ -20,7 +20,7 @@
             }
         </div>
     </div>
-    <!-- Tooted -->
+    <!-- Products -->
     <div class="col-md-7">
         <div class="tab-content" id="v-pills-tabContent">
             @foreach (var category in Model.ProductTypes)
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <!-- Praegune arve -->
+    <!-- Current receipt -->
     <div class="col-md-3">
         <h4>Current Bill</h4>
         <table class="table">
@@ -127,12 +127,11 @@
 </div>
 @section Scripts {
     <script>
-$(document).ready(function() {
-// Bootstrap tab aktiveerimise skript
-$('#v-pills-tab a').on('click', function (e) {
-e.preventDefault();
-$(this).tab('show');
-});
-});
-</script>
+        $(document).ready(function() {
+            $('#v-pills-tab a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    </script>
 }
