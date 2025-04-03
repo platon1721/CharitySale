@@ -1,5 +1,5 @@
 # SaleManager
-This project was developed by Platon Matsinski as part of the Enefit internship selection process.
+This project was developed by Platon Matsinski as part of the internship selection process.
 
 ## Requirements
 
